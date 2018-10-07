@@ -1,0 +1,52 @@
+﻿@using CheckableTable.Models.ViewModel
+
+@model IEnumerable<ReviewClearanceTrackViewModel>
+
+@{
+    ViewData["Title"] = "Index";
+
+}
+<h2>Index</h2>
+<table class="table table-bordered table-hover">
+    <thead>
+        <tr>
+            <th scope="col"></th>
+            <th scope="col">ID</th>
+            <th scope="col">Name</th>
+            <th scope="col">Status</th>
+        </tr>
+    </thead>
+    <span id="span" hidden>Selected:</span>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr class="item">
+                <td><input class="data-checked" type="checkbox" @(item.Status == ReviewClearanceStatus.Approve ? "disabled" : "") /></td>
+                <td>@item.ID</td>
+                <td>@item.Name</td>
+                <td>
+                    <select asp-for="@item.Status" asp-items="Html.GetEnumSelectList<ReviewClearanceStatus>()"></select>
+                </td>
+            </tr>
+        }
+
+    </tbody>
+</table>
+
+@section scripts {
+    <script>
+        $("document").ready(function () {
+            $("td input[type='checkbox']").click(function () {
+                var isAnyOn = false;
+                $("table [type='checkbox']").each(function (i, chk) {
+                    if (chk.checked)
+                        isAnyOn = true;
+                });
+                if (isAnyOn)
+                    $("#span").removeAttr('hidden');
+                else
+                    $("#span").prop('hidden', true);
+            })
+        });
+    </script>
+}
